@@ -1,28 +1,104 @@
 # Web API with ASP.NET Core and PostgreSQL Database
-A tutorial based in the [Tutorial: Create a web API with ASP.NET Core](https://github.com/empalacios/web-API-with-ASP.NET-Core) to use a PostgreSQL Database.
+A assignment based in the [Create a web API with ASP.NET Core](https://https://github.com/nhk1978/TodoAPI) to use a PostgreSQL Database.
 
 ## First steps
-Follow the steps in https://github.com/empalacios/web-API-with-ASP.NET-Core repository, as that is the starting point.
+Follow the steps in https://https://github.com/nhk1978/TodoAPI repository, as that is the starting point.
 
 ## Tutorial Steps
 ### Add the PostgreSQL Provider
 ```
-cd /vagrant/TodoApi
 dotnet add package Npgsql.EntityFrameworkCore.PostgreSQL
 ```
 
-### Add Mono Most Recent Stable Packages
-Add the latest stable Mono repository in order to get the most recent packages when installing NuGet. Updating NuGet breaks itself because of new packages versions needed.
+### Create tables on PostgreSQL
+run script_er.sql to create 2 tables: user and todo and a type todo_status
 ```
-apt install apt-transport-https dirmngr gnupg ca-certificates
-apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys 3FA7E0328081BFF6A14DA29AA6A19B38D3D831EF
-echo "deb https://download.mono-project.com/repo/debian stable-buster main" | tee /etc/apt/sources.list.d/mono-official-stable.list
-apt update
-```
+### Run profile TodoAPI
 
-## Resources
--  [Create web APIs with ASP.NET Core](https://docs.microsoft.com/en-us/aspnet/core/web-api/?view=aspnetcore-5.0)
--  [Npgsql Entity Framework Core Provider](https://www.npgsql.org/efcore/)
--  [Introducción a EF Core](https://docs.microsoft.com/es-es/ef/core/get-started/overview/first-app?tabs=netcore-cli)
--  [Razor Pages with Entity Framework Core in ASP.NET Core - Tutorial 1 of 8](https://docs.microsoft.com/en-us/aspnet/core/data/ef-rp/intro?view=aspnetcore-5.0&tabs=visual-studio-code)
--  [Download Mono for Debian](https://www.mono-project.com/download/stable/#download-lin-debian)
+### On Postman, Run testcases
+POST http://localhost:7979/api/v1/signup
+Body in JSON
+{
+    "email": "abc123@abc.abc",
+    "password": "hahaha"
+}
+->Success
+Body in JSON
+{
+    "email": "abc123@abc.abc",
+    "password": "1234567"
+}
+->Fail
+POST http://localhost:7979/api/v1/signin
+Body in JSON
+{
+    "email": "abc123@abc.abc",
+    "password": "hahaha"
+}
+
+Using bearer token from this step for following APIs
+->Success
+Body in JSON
+{
+    "email": "abc123@abc.abc",
+    "password": "hahaha"
+}
+->Fail
+PUT http://localhost:7979/api/v1/changePassword/newpass
+Body in JSON
+{
+    "email": "abc123@abc.abc",
+    "password": "hahaha"
+}
+->Success
+PUT http://localhost:7979/api/v1/changePassword/newpass
+Body in JSON
+{
+    "email": "abc123@abc.abc",
+    "password": "hahaha"
+}
+->Fail
+POST http://localhost:7979/api/v1/todos
+Body in JSON
+{
+    "name": "abcfffsssssssff",
+    "description": "desffffssssssssffffffff77777fff1",
+    "userid":1,
+    "status":1
+}
+->Success
+POST http://localhost:7979/api/v1/todos
+Body in JSON
+{
+    "name": "abcfffsssssssff",
+    "description": "desffffssssssssffffffff77777fff1",
+    "userid":6,
+    "status":1
+}
+->Fail
+PUT http://localhost:7979/api/v1/todos/1
+Body in JSON
+{
+    "name": "abcddddddddddddd",
+    "description": "des1555aaaaaaaaaaaaaaaaaaaaaaahhhhhhhhh5",
+    "userid":1,
+    "status":2
+}
+->Success
+PUT http://localhost:7979/api/v1/todos/1
+Body in JSON
+{
+    "name": "abcddddddddddddd",
+    "description": "des1555aaaaaaaaaaaaaaaaaaaaaaahhhhhhhhh5",
+    "userid":1,
+    "status":2
+}
+->Success
+GET http://localhost:7979/api/v1/todos?status=Completed
+->Success
+GET http://localhost:7979/api/v1/todos?status=OnGoing
+->Fail
+DELETE http://localhost:7979/api/v1/todos/1
+->Success
+DELETE http://localhost:7979/api/v1/todos/1
+->Fail
